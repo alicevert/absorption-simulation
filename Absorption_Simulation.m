@@ -7,7 +7,9 @@
 %% The simulation is based off algorithm by Dani et al. [1]
 %% All units are SI except the absorption coefficient (cm^-1). Angles are in rads.
 
-%%                                  References
+%% -------------------------------------------------------------------------- %%
+%% ------------------------------- References ------------------------------- %%
+%% -------------------------------------------------------------------------- %%
 %% [1] R.K. Dani et al., “Supplemental Material for "Faraday rotation enhancement 
 %%     of gold coated Fe2O3 nanoparticles: Comparison of experiment and theory” "
 %%     J. Chem. Phys, vol. 135, no. 224502, 2011. 
@@ -15,7 +17,9 @@
 %%     to Incorporate into Silicon Waveguides to be Used as Optical Isolators,” 
 %%     M.S. thesis, Eng. Phys., McMaster Univ., Hamilton, Ontario, 2019. [Online]. Available: https://macsphere.mcmaster.ca/bitstream/11375/24720/2/Ibrahim_Amr_E_201908_MASc.pdf 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% -------------------------------------------------------------------------- %%
+%% -------------------------- Absorption Function --------------------------- %%
+%% -------------------------------------------------------------------------- %%
 function [wavelength,absorption]=Absorption_Simulation(core_radius,shell_thickness) 
 %The program will starting timing the run.
 %tic
@@ -66,6 +70,8 @@ c_gammap = (2.75e14/(0.347e-15))+vf/b;      % damping frequency, CHANGE
 c_g0=1.2e15;                                % fitted parameter for tin oxide absorption 
 c_w0=6.7e15;                                % fitted parameter for tin oxide absorption 
 c_gamma0=9e15;                              % fitted parameter for tin oxide absorption  
+c_ns=2.65e5;                                % Number density
+fs=c_ns*c_Vs;                                % Volume fraction   
 
 % %% Option 2: Fe2O3 (comment out SnO2 parameters) [2]
 
@@ -76,6 +82,8 @@ c_gamma0=9e15;                              % fitted parameter for tin oxide abs
 % c_g0=5.2e15;                              % fitted parameter for iron oxide absorption [2]
 % c_w0=5.06e15;                             % fitted parameter for iron oxide absorption [2]
 % c_gamma0=2.89e15;                         % fitted parameter for iron oxide absorption [2]
+% c_ns=3.5e18;                              % Number density
+% f=c_ns*c_Vs;                              % Volume fraction
 
 %% All Options (do not comment out)
 Bzint=(((2/9)*mu0*c_Vs*Ms^2)/(kb*T))*B;     % internal magnetic field

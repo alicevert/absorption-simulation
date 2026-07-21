@@ -133,7 +133,7 @@ for lambda=wavelength
     fprintf('%-15s %-15s', 'AbsorptionLambda', newline);
     end
 
-    absorptionLambda = (2 * w / c) * imag(sqrt((eps_finalL + eps_finalR) / 2));
+    absorptionLambda = (2 * w / c) * imag(sqrt((eps_XX));
     absorption(end + 1) = absorptionLambda / 100;  % append value
 
     % Display absorption value

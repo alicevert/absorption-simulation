@@ -6,7 +6,7 @@ The simulation is adapted from the Absorption Simulation function by written Ken
 If the absorption peak wavelength is known, this simulation can be used to estimate b and d by brute-force curve-fitting.
 
 ## Before running the function
-Edit the Absorption Simulation file to suit your needs. 
+Edit the Absorption Simulation file to suit your needs. --- Future work: enable saving of "other" core material parameters between callings of the function. \
 Make sure the fitted parameters (for the core - SnO2 or Fe2O3 - and Au) are up to date with the most recent experimental data.
 Comment out the parameters for the type of core that's not of interest (either SnO2 or Fe2O3). Comment out the dielectric function of the effective medium that's not being used (either water or air).
 All the units are SI except the absorption coefficient (cm^-1) and the angles are in radians.

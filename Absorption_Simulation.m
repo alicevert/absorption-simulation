@@ -1,13 +1,14 @@
-%% Last updated: 2026-07-28 by Alice Calvert
+%% Last updated: 2026-08-05 by Alice Calvert
 %% Updated: 2025-02-27 by Raaja rajeshwari Manickam 
 %% 2021-08-27 by Kenzie Lewis
 %% This is a program to simulate the wavelength-dependent absorption coefficient (alpha)
 %% for SnO2 @ Au nanoparticles by changing the core size (b) and shell thickness (d), which are inputs. 
-%% Other inputs are the planar number density [1/m^2], the core material, the dielectric permittivity of the medium in which the 
-%% nanoparticles are immersed, the range of wavelengths, and the option of whether to display the alpha values in the command window or not.
+%% Other inputs are the planar number density [1/m^2], the core material, and the applied magnetic flux density (B) [T], which is assumed to be parallel 
+%% to the sample normal,the dielectric permittivity of the medium in which the nanoparticles are immersed, the range of wavelengths, and the option of 
+%% whether to display the alpha values in the command window or not.
 %% The outputs are the absorption coefficients at each wavelength.
 %% The simulation is based off algorithm by Dani et al. [1]
-%% All units are SI except the absorption coefficient [cm^-1]. Angles are in rads.
+%% All units are SI except the absorption coefficient [cm^-1].
 
 %% -------------------------------------------------------------------------- %%
 %% ------------------------------- References ------------------------------- %%
@@ -23,15 +24,15 @@
 %% -------------------------- Absorption Function --------------------------- %%
 %% -------------------------------------------------------------------------- %%
 
-function [wavelength,absorption]=Absorption_Simulation(core_radius,shell_thickness,planar_density,core_material,eff_medium,wavelength,display_alpha) 
+function [wavelength,absorption]=Absorption_Simulation(core_radius,shell_thickness,planar_density,core_material,magnetic_flux,eff_medium,wavelength,display_alpha) 
 
 tic %start timing run
 
 %% General Parameters & Constants
 
 c=3e8;                             % speed of light [m/s]
-Bz=0;                              % applied magnetic field along z [T]
-B=0;                               % applied magnetic field [T]
+Bz=magnetic_flux;                  % applied magnetic flux along z [T]
+B=magnetic_flux;                   % applied magnetic flux density [T]
 T=20+273.15;                       % temperature [K]
 kb=1.38064852e-23;                 % Boltzmann constant
 me=9.10938356e-31;                 % effective mass of electron [kg]
@@ -69,8 +70,10 @@ epsa=eff_medium;
 if strcmpi(core_material, 'sno2')
 
     %% Option 1: SnO2 [2]
-
-    Keff=5e3;                                   % effective anisotropy constant, 5-9e3 [2] J/m^2
+    tau=0.347e-15;                            % scattering time
+    vf=0;                                     % Fermi velocity
+    c_wp=0;                                  % plasma frequency
+    c_gammap=1/tau+vf/b;                     % damping frequency
     Ms=250e3;                                   % saturation magnetization, 250-300e3 [2] A/m
     c_wp=0;                                     % plasma frequency [rad/s]
     c_gammap = (2.75e14/(0.347e-15))+vf/b;      % damping frequency, CHANGE
@@ -82,8 +85,11 @@ if strcmpi(core_material, 'sno2')
 elseif strcmpi(core_material, 'fe2o3')
     
     %% Option 2: Fe2O3 [1]
-
-    Keff=4700;%9e3;                           % effective anisotropy constant, 5-9e3 J/m^2
+    
+    tau=0.347e-15;                            % scattering time
+    vf=0;                                     % Fermi velocity
+    c_wp=0;                                   % plasma frequency
+    c_gammap=1/tau+vf/b;                      % damping frequency
     Ms=414e3;%250e3;                          % saturation magnetization, 250-300e3 A/m
     c_wp=0;                                   % plasma frequency [rad/s]
     c_gammap=1/(0.347e-15)+vf/b;              % damping frequency
@@ -99,14 +105,14 @@ elseif strcmpi(core_material, 'other')
     confirmed = false;
     while ~confirmed
 
-        Keff = input('Enter the average anisotropy constant [J/m^3]:');
+        tau = input('Enter the scattering time [s] of the free electrons:');
+        vf = input('Enter the Fermi velocity [m/s] of the free electrons:');
+        c_wp = input('Enter the plasma frequency [rad/s] of the free electrons:');
+        c_gammap = (1/tau)+(vf/b);
         Ms = input('Enter the saturation magnetization [A/m]:');
-        c_wp = input('Enter the plasma frequency of free electrons [rad/s]:');
-        c_gammap = input('Enter the damping frequency of free electrons [Hz]');
         c_g0 = input('Enter the oscillator strength of bound electrons:');
         c_w0 = input('Enter the binding frequency [Hz] of bound electrons:');
         c_gamma0 = input('Enter the damping frequency [Hz] of bound electrons:');
-        c_ns = input('Enter the nanoparticle number density [1/m^3]:');
         
         while true
 
@@ -142,17 +148,17 @@ for i = 1:length(wavelength)
     
     % -------- Gold shell contribution to dielectric function (eps_b) -------- %
 
-    eps_bL= 1-(g_g0^2)/(w^2-g_w0^2+1i*g_gamma0*w-w*g_wB)-(g_wp^2)/(w^2+1i*g_gammap*w-w*g_wB); % dielectric function, gold, left polarization
-    eps_bR= 1-(g_g0^2)/(w^2-g_w0^2+1i*g_gamma0*w+w*g_wB)-(g_wp^2)/(w^2+1i*g_gammap*w+w*g_wB); % dielectric function, gold, right polarization
+    eps_bL= 1-(g_g0^2)/(w^2-g_w0^2+1i*g_gamma0*w-w*g_wB)-(g_wp^2)/(w^2+1i*g_gammap*w-w*g_wB); % dielectric function, left polarization
+    eps_bR= 1-(g_g0^2)/(w^2-g_w0^2+1i*g_gamma0*w+w*g_wB)-(g_wp^2)/(w^2+1i*g_gammap*w+w*g_wB); % dielectric function, right polarization
     
 
     % -------- Core contribution to dielectric function (eps_c) [2] ---------- %
 
-    eps_cL= 1-(c_g0^2)/(w^2-c_w0^2+1i*c_gamma0*w-w*c_wB); % dielectric function, metal oxide, left polarization
-    eps_cR= 1-(c_g0^2)/(w^2-c_w0^2+1i*c_gamma0*w+w*c_wB); % dielectric function, metal oxide, right polarization
+    eps_cL= 1-(c_g0^2)/(w^2-c_w0^2+1i*c_gamma0*w-w*c_wB)-(c_wp^2)/(w^2+1i*c_gammap*w-w*c_wB); % dielectric function, left polarization
+    eps_cR= 1-(c_g0^2)/(w^2-c_w0^2+1i*c_gamma0*w+w*c_wB)-(c_wp^2)/(w^2+1i*c_gammap*w+w*c_wB); % dielectric function, right polarization
     
     % ------------------ Core/shell permittivity (eps_s) --------------------- %
-    % Based off Maxwell-Garnet Theory, with shell as effective medium [1]
+    % Based off Maxwell-Garnett Theory, with shell as effective medium [1]
  
     beta_cL=fc*(eps_cL-eps_bL)/(eps_cL+2*eps_bL);
     beta_cR=fc*(eps_cR-eps_bR)/(eps_cR+2*eps_bR);
@@ -161,7 +167,7 @@ for i = 1:length(wavelength)
 
    
     % ----------------- Effective permittivity (eps_final) ------------------- %
-    % Based off Maxwell-Garnet Theory, with water medium [1]
+    % Based off Maxwell-Garnett Theory, with water medium [1]
 
     beta_sL = fs*(eps_sL-epsa)/(eps_sL+2*epsa);
     beta_sR = fs*(eps_sR-epsa)/(eps_sR+2*epsa);

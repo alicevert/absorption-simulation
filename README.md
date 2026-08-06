@@ -5,7 +5,7 @@ The outputs are the absorption coefficient at each wavelength.
 The simulation is adapted from the Absorption Simulation function by written Kenzie Lewis and Raaja Rajeshwari Manickam, which is based off the algorithm by Dani et al. [1]
 If the absorption peak wavelength is known, this simulation can be used to estimate b and d by fitting the simulated absorption coefficient spectra to the experimental UV-Vis data.
 
-## Before running the function
+## Before simulation
 Make sure the fitted parameters (for the core - SnO2, Fe2O3, or other - and the Au shell) are up to date with the most recent experimental data. 
 All the units are SI except the absorption coefficient [cm^-1].
 

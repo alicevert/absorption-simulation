@@ -1,6 +1,6 @@
 # Absorption Simulation
 This is a program that simulates the wavelength-dependent absorption coefficient (alpha) for core-shell nanoparticles.
-The inputs are the core size (b) [nm], shell thickness (d) [nm], the planar number density [1/m^2], the core material, the dielectric permittivity of the medium in which the nanoparticles are immersed, the range of wavelengths, and the option of whether to display the alpha values in the command window or not.
+The inputs are the core size (b) [nm], shell thickness (d) [nm], the planar number density [1/m^2], the core material, the applied magnetic flux density (B) [T], the dielectric permittivity of the medium in which the nanoparticles are immersed, the range of wavelengths, and the option of whether to display the alpha values in the command window or not.
 The outputs are the absorption coefficient at each wavelength.
 The simulation is adapted from the Absorption Simulation function by written Kenzie Lewis and Raaja Rajeshwari Manickam, which is based off the algorithm by Dani et al. [1]
 If the absorption peak wavelength is known, this simulation can be used to estimate b and d by fitting the simulated absorption coefficient spectra to the experimental UV-Vis data.

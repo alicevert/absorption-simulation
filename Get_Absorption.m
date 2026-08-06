@@ -1,4 +1,4 @@
-% Last Updated: 2026-07-28 by Alice Calvert
+% Last Updated: 2026-08-05 by Alice Calvert
 % This is a script for plotting the wavelength-dependent absorption coefficient (alpha) across different wavelengths.
 % The function in Absorption_Simulation is run to get the alpha values for a given core radius (b), shell thickness (d) or particle radius (a).
 % Optionally, absorbance (A) may be plotted across different wavelengths for different b and d. 
@@ -54,6 +54,7 @@ while true
 end
 
 n = input("Enter the planar density [1/m^2]:");
+B = input("Enter the applied magnetic flux density [T]:");
 
 while true
     display = input('Do you want to display all the absorption coefficient values by wavelength? ("yes" or "no"):','s');
@@ -92,7 +93,7 @@ while true
                 
             d = d_values(i);
     
-            [wavelength, absorption] = Absorption_Simulation(b, d, n, core, epsa, lambda, display);
+            [wavelength, absorption] = Absorption_Simulation(b, d, n, core, B, epsa, lambda, display);
     
             wavelength_nm = wavelength * 1e9; %convert to nm
     
@@ -133,7 +134,7 @@ while true
 
         end
         
-        title(sprintf('Absorption of SnO_2@Au nanoparticles (b=%.1fnm)',b))
+        title(sprintf('Absorption of core/shell nanoparticles (b=%.1fnm)',b))
         
         break;
 
@@ -149,7 +150,7 @@ while true
         
             b = b_values(i);
         
-            [wavelength, absorption] = Absorption_Simulation(b, d, m, core, espa, lambda, display);
+            [wavelength, absorption] = Absorption_Simulation(b, d, m, core, B, espa, lambda, display);
         
             wavelength_nm = wavelength * 1e9; %convert to nm
         
@@ -189,7 +190,7 @@ while true
         
         end
         
-        title(sprintf('Absorption of SnO_2@Au nanoparticles (d=%.2fnm)',d))
+        title(sprintf('Absorption of core/shell nanoparticles (d=%.2fnm)',d))
         
         break;
 
@@ -224,7 +225,7 @@ while true
             b = b_values(i);
             d = d_values(i);
 
-            [wavelength, absorption] = Absorption_Simulation(b, d, n, core, epsa, lambda, display);
+            [wavelength, absorption] = Absorption_Simulation(b, d, n, core, B, epsa, lambda, display);
 
             wavelength_nm = wavelength * 1e9; %convert to nm
 
@@ -263,7 +264,7 @@ while true
 
         end
 
-        title(sprintf('Absorption of SnO_2@Au nanoparticles (a=%.1fnm)',a))
+        title(sprintf('Absorption of core/shell nanoparticles (a=%.1fnm)',a))
 
         break;
 
